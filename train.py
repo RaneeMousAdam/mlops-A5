@@ -1,5 +1,6 @@
 import mlflow
 import random
+random.seed(42)
 
 # لو عندك secret هيتاخد من GitHub
 mlflow.set_tracking_uri("mlruns")

@@ -1,0 +1,58 @@
+name: ML Pipeline
+
+on: [push]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Fake DVC pull
+        run: echo "No data needed"
+
+      - name: Train model
+        run: python train.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-info
+          path: model_info.txt
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: model-info
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Check threshold
+        run: python check_threshold.py
+
+      - name: Mock Docker build
+        run: echo "Building Docker image for Run ID: $(cat model_info.txt)"

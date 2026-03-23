@@ -22,4 +22,4 @@ with mlflow.start_run() as run:
     mlflow.log_metric("accuracy", accuracy)
 
     with open("model_info.txt", "w") as f:
-        f.write(run.info.run_id)
+        f.write(str(accuracy))

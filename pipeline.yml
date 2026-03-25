@@ -25,8 +25,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Pull data with DVC
-        run: |
-          dvc pull || echo "No DVC remote configured – skipping pull"
+        run: dvc pull || echo "No DVC remote configured – skipping"
 
       - name: Train model
         env:
@@ -72,5 +71,3 @@ jobs:
         run: |
           RUN_ID=$(cat model_info.txt)
           echo "Building Docker image for Run ID: ${RUN_ID}"
-          docker build --build-arg RUN_ID="${RUN_ID}" -t mlops-model:${RUN_ID} .
-          echo "Docker image mlops-model:${RUN_ID} built successfully!"
